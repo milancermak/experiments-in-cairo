@@ -13,12 +13,12 @@ async def test_const_reading(state):
 
 @pytest.mark.asyncio
 async def test_single_value_storage_var(state):
-    tx_info = await state.get_balance().call()
+    tx_info = await state.get_balance().invoke()
     assert tx_info.result.amount == 0
 
     await state.set_balance(100).invoke()
 
-    tx_info = await state.get_balance().call()
+    tx_info = await state.get_balance().invoke()
     assert tx_info.result.amount == 100
 
 
@@ -26,7 +26,7 @@ async def test_single_value_storage_var(state):
 async def test_storage_var_struct(state):
     player = 1
 
-    tx_info = await state.get_player_position_struct(player).call()
+    tx_info = await state.get_player_position_struct(player).invoke()
     position = tx_info.result.position
 
     assert position.x == 0
@@ -34,7 +34,7 @@ async def test_storage_var_struct(state):
     assert position.z == 0
 
     await state.set_player_position_struct_as_xyz(player, 99, 99, 99).invoke()
-    tx_info = await state.get_player_position_struct(player).call()
+    tx_info = await state.get_player_position_struct(player).invoke()
     position = tx_info.result.position
 
     assert position.x == 99
@@ -43,7 +43,7 @@ async def test_storage_var_struct(state):
 
     new_position = Point(2, 4, 6)
     await state.set_player_position_struct_directly(player, new_position).invoke()
-    tx_info = await state.get_player_position_struct(player).call()
+    tx_info = await state.get_player_position_struct(player).invoke()
     position = tx_info.result.position
 
     assert position.x == 2
@@ -55,20 +55,20 @@ async def test_storage_var_struct(state):
 async def test_storage_var_tuple(state):
     player = 8
 
-    tx_info = await state.get_player_position_tuple(player).call()
+    tx_info = await state.get_player_position_tuple(player).invoke()
     position = tx_info.result.position
 
     assert position == (0, 0, 0)
 
     await state.set_player_position_tuple_as_xyz(player, 99, 99, 99).invoke()
-    tx_info = await state.get_player_position_tuple(player).call()
+    tx_info = await state.get_player_position_tuple(player).invoke()
     position = tx_info.result.position
 
     assert position == (99, 99, 99)
 
     new_position = (2, 4, 6)
     await state.set_player_position_tuple_as_tuple(player, new_position).invoke()
-    tx_info = await state.get_player_position_tuple(player).call()
+    tx_info = await state.get_player_position_tuple(player).invoke()
     position = tx_info.result.position
 
     assert position == new_position
@@ -78,14 +78,14 @@ async def test_storage_var_tuple(state):
 async def test_mapping_storage_var(state):
     street = 53
     avenue = 3
-    tx_info = await state.get_manhattan_rating(street, avenue).call()
+    tx_info = await state.get_manhattan_rating(street, avenue).invoke()
     rating = tx_info.result.star_rating
 
     assert rating == 0
 
     new_rating = 5
     await state.set_manhattan_rating(street, avenue, new_rating).invoke()
-    tx_info = await state.get_manhattan_rating(street, avenue).call()
+    tx_info = await state.get_manhattan_rating(street, avenue).invoke()
     rating = tx_info.result.star_rating
 
     assert rating == new_rating
@@ -115,7 +115,7 @@ async def test_init_chess_game(state):
 
     assert game_id == 9
 
-    tx_info = await state.get_chess_game_board(game_id).call()
+    tx_info = await state.get_chess_game_board(game_id).invoke()
     board = tx_info.result.board
 
     assert len(board) == 64
