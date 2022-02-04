@@ -4,9 +4,13 @@ import pytest
 from starkware.starknet.testing.starknet import Starknet
 
 
-def contract_path(contract_name: str) -> str:
+def contract_dir() -> str:
     here = os.path.abspath(os.path.dirname(__file__))
-    return os.path.join(here, "..", "contracts", contract_name)
+    return os.path.join(here, "..", "contracts")
+
+
+def contract_path(contract_name: str) -> str:
+    return os.path.join(contract_dir(), "..", "contracts", contract_name)
 
 
 @pytest.fixture(scope="module")
@@ -52,4 +56,11 @@ async def echo1(starknet):
 async def echo2(starknet):
     contract_src = contract_path("echo.cairo")
     contract = await starknet.deploy(source=contract_src)
+    return contract
+
+
+@pytest.fixture(scope="module")
+async def only_funcs(starknet):
+    contract_src = contract_path("deeper/only_funcs.cairo")
+    contract = await starknet.deploy(source=contract_src, cairo_path=[contract_dir()])
     return contract
