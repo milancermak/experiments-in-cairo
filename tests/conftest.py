@@ -64,3 +64,9 @@ async def echo2(starknet):
 async def only_funcs(starknet):
     contract = compile_contract("deeper/only_funcs.cairo")
     return await starknet.deploy(contract_def=contract)
+
+
+@pytest.fixture(scope="module")
+async def debug_hints(starknet):
+    contract = compile_contract("debug_hints.cairo")
+    return await starknet.deploy(contract_def=contract)
