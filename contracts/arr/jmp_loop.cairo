@@ -28,7 +28,6 @@ end
 
 @view
 func exp_inst(x : felt, a : felt, n : felt) -> (res : felt):
-
     exp:
     # [fp - 5], [fp - 4], [fp - 3] are x, a, n, respectively.
     jmp body if [fp - 3] != 0

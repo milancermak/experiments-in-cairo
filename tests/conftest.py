@@ -73,6 +73,12 @@ async def debug_hints(starknet):
 
 
 @pytest.fixture(scope="module")
+async def various(starknet):
+    contract = compile_contract("various.cairo")
+    return await starknet.deploy(contract_def=contract)
+
+
+@pytest.fixture(scope="module")
 async def jmp_loop(starknet):
     contract = compile_contract("arr/jmp_loop.cairo")
     return await starknet.deploy(contract_def=contract)

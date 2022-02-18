@@ -6,7 +6,6 @@ async def test_sum(jmp_loop):
     arr = list(range(40))
     tx = await jmp_loop.sum(arr).invoke()
     assert tx.result.res == sum(arr)
-    print(tx)
 
 
 @pytest.mark.asyncio

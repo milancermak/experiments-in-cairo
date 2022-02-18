@@ -21,3 +21,7 @@ This contract ([`echo.cairo`](./contracts/echo.cairo)) serves to test what happe
 ## state.cairo
 
 The [`state.cairo`](./contracts/state.cairo) contract contains various examples on how to store and model data in Cairo. Warning, not all might be sane 😅
+
+## various.cairo
+
+Random experiments and peculiarities that don't have a place are in [`various.cairo`](./contracts/various.cairo).
