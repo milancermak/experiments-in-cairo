@@ -2,6 +2,7 @@ import asyncio
 import os
 import pytest
 
+from starkware.starknet.business_logic.state import BlockInfo
 from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.services.api.contract_definition import ContractDefinition
 from starkware.starknet.testing.starknet import Starknet
@@ -82,3 +83,30 @@ async def various(starknet):
 async def jmp_loop(starknet):
     contract = compile_contract("arr/jmp_loop.cairo")
     return await starknet.deploy(contract_def=contract)
+
+@pytest.fixture(scope="module")
+async def mocking_internals(starknet):
+    contract = compile_contract("test_mocking_internals.cairo")
+    return await starknet.deploy(contract_def=contract)
+
+
+@pytest.fixture
+async def block_info_mock(starknet):
+    class Mock:
+        def __init__(self, current_block_info):
+            self.block_info = current_block_info
+
+        def update(self, block_number, block_timestamp):
+            starknet.state.state.block_info = BlockInfo(block_number, block_timestamp)
+
+        def reset(self):
+            starknet.state.state.block_info = self.block_info
+
+        def set_block_number(self, block_number):
+            starknet.state.state.block_info = BlockInfo(block_number, self.block_info.block_timestamp)
+
+        def set_block_timestamp(self, block_timestamp):
+            starknet.state.state.block_info = BlockInfo(self.block_info.block_number, block_timestamp)
+
+
+    return Mock(starknet.state.state.block_info)
