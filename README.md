@@ -18,6 +18,10 @@ This contract ([`echo.cairo`](./contracts/echo.cairo)) serves to test what happe
 
 [`debug_hints.cairo](./contracts/debug_hints.cairo) shows a super useful way how to use hints for debug purposes. In the test suite, a contract is compiled with `disable_hint_validation=True` which means all hints are fair game. This way, we can add `print` statements at will to ease debugging. All credit goes to [Marcello](https://twitter.com/0xmarcello/status/1491881209240043529) for discovering this technique.
 
+## visibility
+
+The [visibility](./contracts/visibility/) dir hold a simple PoC of unintentional functionality creep. On the surface, the`main.cairo` contract only exposes a single view function. However, because it imports from `library.cairo`, when deployed, these will be compiled and "merged" together. The [deployed contract](https://goerli.voyager.online/contract/0x05e3bf41a8528fa0656b7aea16156a8f53a7064dff372481ce8cc490eb3c05e3#readContract) will also expose `increment` and `get_value` as functions. Furthermore, even though `increment` is marked as a view function, it alters a storage variable 🙈
+
 ## state.cairo
 
 The [`state.cairo`](./contracts/state.cairo) contract contains various examples on how to store and model data in Cairo. Warning, not all might be sane 😅

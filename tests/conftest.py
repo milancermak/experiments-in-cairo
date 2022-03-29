@@ -97,6 +97,12 @@ async def mocking_internals(starknet):
     return await starknet.deploy(contract_def=contract)
 
 
+@pytest.fixture(scope="module")
+async def visibility_main(starknet):
+    contract = compile_contract("visibility/main.cairo")
+    return await starknet.deploy(contract_def=contract)
+
+
 @pytest.fixture
 async def block_info_mock(starknet):
     class Mock:
@@ -110,10 +116,13 @@ async def block_info_mock(starknet):
             starknet.state.state.block_info = self.block_info
 
         def set_block_number(self, block_number):
-            starknet.state.state.block_info = BlockInfo(block_number, self.block_info.block_timestamp)
+            starknet.state.state.block_info = BlockInfo(
+                block_number, self.block_info.block_timestamp
+            )
 
         def set_block_timestamp(self, block_timestamp):
-            starknet.state.state.block_info = BlockInfo(self.block_info.block_number, block_timestamp)
-
+            starknet.state.state.block_info = BlockInfo(
+                self.block_info.block_number, block_timestamp
+            )
 
     return Mock(starknet.state.state.block_info)
