@@ -16,7 +16,7 @@ This contract ([`echo.cairo`](./contracts/echo.cairo)) serves to test what happe
 
 ## debug_hints.cairo
 
-[`debug_hints.cairo](./contracts/debug_hints.cairo) shows a super useful way how to use hints for debug purposes. In the test suite, a contract is compiled with `disable_hint_validation=True` which means all hints are fair game. This way, we can add `print` statements at will to ease debugging. All credit goes to [Marcello](https://twitter.com/0xmarcello/status/1491881209240043529) for discovering this technique.
+[`debug_hints.cairo`](./contracts/debug_hints.cairo) shows a super useful way how to use hints for debug purposes. In the test suite, a contract is compiled with `disable_hint_validation=True` which means all hints are fair game. This way, we can add `print` statements at will to ease debugging. All credit goes to [Marcello](https://twitter.com/0xmarcello/status/1491881209240043529) for discovering this technique.
 
 ## visibility
 
