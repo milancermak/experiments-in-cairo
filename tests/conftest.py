@@ -84,6 +84,13 @@ async def jmp_loop(starknet):
     contract = compile_contract("arr/jmp_loop.cairo")
     return await starknet.deploy(contract_def=contract)
 
+
+@pytest.fixture(scope="module")
+async def using_invoke(starknet):
+    contract = compile_contract("using_invoke.cairo")
+    return await starknet.deploy(contract_def=contract)
+
+
 @pytest.fixture(scope="module")
 async def mocking_internals(starknet):
     contract = compile_contract("test_mocking_internals.cairo")

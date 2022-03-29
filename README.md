@@ -1,6 +1,6 @@
 # experiments-in-cairo
 
-A collection of various experiment in using and abusing the [Cairo language](https://www.cairo-lang.org/). I've created the contracts while learning and experimenting with Cairo myself. Most contracts are fully tested. They work with Cairo v0.6.2.
+A collection of various experiment in using and abusing the [Cairo language](https://www.cairo-lang.org/). I've created the contracts while learning and experimenting with Cairo myself. Most contracts are fully tested. Most work with Cairo v0.6.2, but some require v0.8.0.
 
 ## calls.cairo & target.cairo
 
@@ -25,3 +25,7 @@ The [`state.cairo`](./contracts/state.cairo) contract contains various examples 
 ## various.cairo
 
 Random experiments and peculiarities that don't have a place are in [`various.cairo`](./contracts/various.cairo).
+
+## using_invoke.cairo
+
+The [`using_invoke.cairo`](./contracts/using_invoke.cairo) shows how to call a function via a pointer, using `invoke`. It's tricky because it requires non-standard way how to set up implicit arguments via the `ap` pointer.
