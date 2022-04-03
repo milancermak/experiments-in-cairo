@@ -6,6 +6,10 @@ A collection of various experiment in using and abusing the [Cairo language](htt
 
 The code in [`calls.cairo`](./contracts/calls.cairo) and accompanying [`target.cairo`](./contracts/target.cairo) contracts serves to experiment with cross contract invocation (only on Starknet itself, no L1 <-> L2). It employs both the `call_contract` syscall and invoking another contract via an interface.
 
+## dicts.cairo
+
+[`dicts.cairo`](./contracts/dicts.cairo) has, as the name suggests, functions to do with Cairo's dict module.
+
 ## echo.cairo
 
 This contract ([`echo.cairo`](./contracts/echo.cairo)) serves to test what happens when you create an infinite invocation loop. Spoiler alert: the transaction fails.

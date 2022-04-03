@@ -103,6 +103,12 @@ async def visibility_main(starknet):
     return await starknet.deploy(contract_def=contract)
 
 
+@pytest.fixture(scope="module")
+async def dicts(starknet):
+    contract = compile_contract("dicts.cairo")
+    return await starknet.deploy(contract_def=contract)
+
+
 @pytest.fixture
 async def block_info_mock(starknet):
     class Mock:
