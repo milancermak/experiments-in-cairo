@@ -4,7 +4,7 @@ A collection of various experiment in using and abusing the [Cairo language](htt
 
 ## calls.cairo & target.cairo
 
-The code in [`calls.cairo`](./contracts/calls.cairo) and accompanying [`target.cairo`](./contracts/target.cairo) contracts serves to experiment with cross contract invocation (only on Starknet itself, no L1 <-> L2). It employs both the `call_contract` syscall and invoking another contract via an interface.
+The code in [`calls.cairo`](./contracts/calls.cairo) and accompanying [`target.cairo`](./contracts/target.cairo) contracts serves to experiment with cross contract invocation (only on Starknet itself, no L1 <-> L2). It employs both the `call_contract` syscall and invoking another contract via an interface, both in a direct fashion and via delegate calls.
 
 ## dicts.cairo
 

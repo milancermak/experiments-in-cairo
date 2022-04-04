@@ -78,3 +78,61 @@ async def test_call_mint_to(calls, targets):
         balance = tx_info.result.balance
 
         assert balance == amount
+
+
+@pytest.mark.asyncio
+async def test_calling_methods(calls, targets, account_contract):
+    # print()
+    # print(account_contract.contract_address)
+    # print(calls.contract_address)
+    # print(targets.contract_address)
+
+    # via call_contract
+    exec_selector = get_selector_from_name("cc_via_call_contract")
+    target_selector = get_selector_from_name("get_caller_and_contract")
+
+    tx = await account_contract.__execute__(
+        calls.contract_address, exec_selector, [targets.contract_address, target_selector]
+    ).invoke()
+    this_caller, this_contract, that_caller, that_contract = tx.result.retdata
+
+    assert this_caller == account_contract.contract_address
+    assert that_caller == calls.contract_address
+    assert this_contract == calls.contract_address
+    assert that_contract == targets.contract_address
+
+    # via delegate_call
+    exec_selector = get_selector_from_name("cc_via_delegate_call")
+    tx = await account_contract.__execute__(
+        calls.contract_address, exec_selector, [targets.contract_address, target_selector]
+    ).invoke()
+    this_caller, this_contract, that_caller, that_contract = tx.result.retdata
+
+    assert this_caller == account_contract.contract_address
+    assert that_caller == account_contract.contract_address
+    assert this_contract == calls.contract_address
+    assert that_contract == calls.contract_address
+
+    # via interface direct
+    exec_selector = get_selector_from_name("cc_via_interface_direct")
+    tx = await account_contract.__execute__(
+        calls.contract_address, exec_selector, [targets.contract_address]
+    ).invoke()
+    this_caller, this_contract, that_caller, that_contract = tx.result.retdata
+
+    assert this_caller == account_contract.contract_address
+    assert that_caller == calls.contract_address
+    assert this_contract == calls.contract_address
+    assert that_contract == targets.contract_address
+
+    # via interface delegate
+    exec_selector = get_selector_from_name("cc_via_interface_delegate")
+    tx = await account_contract.__execute__(
+        calls.contract_address, exec_selector, [targets.contract_address]
+    ).invoke()
+    this_caller, this_contract, that_caller, that_contract = tx.result.retdata
+
+    assert this_caller == account_contract.contract_address
+    assert that_caller == account_contract.contract_address
+    assert this_contract == calls.contract_address
+    assert that_contract == calls.contract_address

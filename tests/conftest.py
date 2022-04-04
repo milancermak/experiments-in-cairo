@@ -32,6 +32,12 @@ async def starknet():
 
 
 @pytest.fixture(scope="module")
+async def account_contract(starknet):
+    contract = compile_contract("dummy_account.cairo")
+    return await starknet.deploy(contract_def=contract, constructor_calldata=[])
+
+
+@pytest.fixture(scope="module")
 async def state(starknet):
     contract = compile_contract("state.cairo")
     return await starknet.deploy(contract_def=contract)

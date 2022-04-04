@@ -2,7 +2,7 @@
 %builtins pedersen range_check
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
-from starkware.starknet.common.syscalls import get_caller_address
+from starkware.starknet.common.syscalls import get_caller_address, get_contract_address
 
 #
 # this contract serves only as a target for external calls from calls.cairo
@@ -73,4 +73,12 @@ func get_balance{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_p
         address : felt) -> (balance : felt):
     let (balance) = balances.read(address)
     return (balance)
+end
+
+@view
+func get_caller_and_contract{syscall_ptr : felt*, range_check_ptr}() -> (
+        caller : felt, contract : felt):
+    let (caller) = get_caller_address()
+    let (contract) = get_contract_address()
+    return (caller, contract)
 end

@@ -4,7 +4,7 @@
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.starknet.common.syscalls import (
-    call_contract, get_contract_address, get_caller_address, CallContractResponse)
+    call_contract, delegate_call, get_contract_address, get_caller_address, CallContractResponse)
 
 #
 # exploration of call_contract syscall
@@ -82,12 +82,12 @@ func call_func_felt_arr{syscall_ptr : felt*}(target_address : felt, selector : f
     return (response.retdata_size, response.retdata)
 end
 
-@external
+@view
 func call_func_new_phone_who_dis{syscall_ptr : felt*}(target_address : felt, selector : felt) -> (
         retdata_len : felt, retdata : felt*):
     alloc_locals
 
-    let (local calldata_ptr : felt*) = alloc()
+    let (calldata_ptr : felt*) = alloc()
     let response : CallContractResponse = call_contract(target_address, selector, 0, calldata_ptr)
     return (response.retdata_size, response.retdata)
 end
@@ -121,4 +121,73 @@ func call_mint_to{syscall_ptr : felt*, range_check_ptr}(
     INotAToken.mint_to(
         contract_address=token_addr, amount=amount, to_addr_len=to_addr_len, to_addr=to_addr)
     return ()
+end
+
+#
+# testing various ways to invoke a function in another contract
+#
+
+@contract_interface
+namespace ICallerContract:
+    func get_caller_and_contract() -> (caller : felt, contract : felt):
+    end
+end
+
+@view
+func cc_via_call_contract{syscall_ptr : felt*}(target_address : felt, selector : felt) -> (
+        this_caller : felt, this_contract : felt, that_caller : felt, that_contract : felt):
+    alloc_locals
+
+    let (this_caller) = get_caller_address()
+    let (this_contract) = get_contract_address()
+
+    let (calldata_ptr : felt*) = alloc()
+    let response : CallContractResponse = call_contract(target_address, selector, 0, calldata_ptr)
+    assert response.retdata_size = 2
+    let that_caller = [response.retdata]
+    let that_contract = [response.retdata + 1]
+
+    return (this_caller, this_contract, that_caller, that_contract)
+end
+
+@view
+func cc_via_delegate_call{syscall_ptr : felt*}(target_address : felt, selector : felt) -> (
+        this_caller : felt, this_contract : felt, that_caller : felt, that_contract : felt):
+    alloc_locals
+
+    let (this_caller) = get_caller_address()
+    let (this_contract) = get_contract_address()
+
+    let (calldata_ptr : felt*) = alloc()
+    let response : CallContractResponse = delegate_call(target_address, selector, 0, calldata_ptr)
+    assert response.retdata_size = 2
+    let that_caller = [response.retdata]
+    let that_contract = [response.retdata + 1]
+
+    return (this_caller, this_contract, that_caller, that_contract)
+end
+
+@view
+func cc_via_interface_direct{syscall_ptr : felt*, range_check_ptr}(target_address : felt) -> (
+        this_caller : felt, this_contract : felt, that_caller : felt, that_contract : felt):
+    alloc_locals
+
+    let (this_caller) = get_caller_address()
+    let (this_contract) = get_contract_address()
+    let (that_caller, that_contract) = ICallerContract.get_caller_and_contract(target_address)
+
+    return (this_caller, this_contract, that_caller, that_contract)
+end
+
+@view
+func cc_via_interface_delegate{syscall_ptr : felt*, range_check_ptr}(target_address : felt) -> (
+        this_caller : felt, this_contract : felt, that_caller : felt, that_contract : felt):
+    alloc_locals
+
+    let (this_caller) = get_caller_address()
+    let (this_contract) = get_contract_address()
+    let (that_caller, that_contract) = ICallerContract.delegate_get_caller_and_contract(
+        target_address)
+
+    return (this_caller, this_contract, that_caller, that_contract)
 end
