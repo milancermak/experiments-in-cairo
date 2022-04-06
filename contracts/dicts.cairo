@@ -26,7 +26,7 @@ func sum_values_by_key{range_check_ptr}(
 
     let (local dict_start : DictAccess*) = default_dict_new(default_value=0)
 
-    let (dict_end : DictAccess*) = sum_values_by_key_loop(dict_start, keys_len, keys, values_len, values)
+    let (dict_end : DictAccess*) = sum_values_by_key_loop(dict_start, keys_len, keys, values)
 
     let (finalized_dict_start, finalized_dict_end) = default_dict_finalize(dict_start, dict_end, 0)
 
@@ -39,11 +39,11 @@ func sum_values_by_key{range_check_ptr}(
 end
 
 func sum_values_by_key_loop{range_check_ptr}(
-        dict : DictAccess*, keys_len : felt, keys : felt*, values_len : felt, values : felt*) -> (
+        dict : DictAccess*, len : felt, keys : felt*, values : felt*) -> (
         dict_end : DictAccess*):
     alloc_locals
 
-    if keys_len == 0:
+    if len == 0:
         return (dict)
     end
 
@@ -51,5 +51,5 @@ func sum_values_by_key_loop{range_check_ptr}(
     let updated = current + [values]
     dict_write{dict_ptr=dict}(key=[keys], new_value=updated)
 
-    return sum_values_by_key_loop(dict, keys_len - 1, keys + 1, values_len - 1, values + 1)
+    return sum_values_by_key_loop(dict, len - 1, keys + 1, values + 1)
 end
