@@ -36,6 +36,25 @@ async def test_what_block_timestamp(mocking_internals, block_info_mock):
     tx = await mocking_internals.what_block_timestamp().invoke()
     assert tx.result.block_timestamp == original_block_timestamp
 
+
+# NOTE: there's no way as of yet (cairo-lang 0.8.2.1) to get the gas price
+#       in starknet, hence no tests for mocking gas_price
+
+
+@pytest.mark.asyncio
+async def test_what_sequencer_address(mocking_internals, block_info_mock):
+    tx = await mocking_internals.what_sequencer_address().invoke()
+    original_sequencer_address = tx.result.sequencer_address
+
+    block_info_mock.set_sequencer_address(42)
+    tx = await mocking_internals.what_sequencer_address().invoke()
+    assert tx.result.sequencer_address == 42
+
+    block_info_mock.reset()
+    tx = await mocking_internals.what_sequencer_address().invoke()
+    assert original_sequencer_address == tx.result.sequencer_address
+
+
 @pytest.mark.asyncio
 async def test_what_caller_address(mocking_internals):
     # just using the caller_address kwarg provided in the invoke

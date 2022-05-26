@@ -1,5 +1,6 @@
 import asyncio
 import os
+from typing import Optional
 import pytest
 
 from starkware.starknet.business_logic.state.state import BlockInfo
@@ -115,26 +116,61 @@ async def dicts(starknet):
     return await starknet.deploy(contract_def=contract)
 
 
+@pytest.fixture(scope="module")
+async def foo(starknet):
+    contract = compile_contract("foo.cairo")
+    return await starknet.deploy(contract_def=contract)
+
+
+@pytest.fixture(scope="module")
+async def tkn(starknet):
+    contract = compile_contract("token/tkn.cairo")
+    return await starknet.deploy(contract_def=contract)
+
+
 @pytest.fixture
 async def block_info_mock(starknet):
     class Mock:
-        def __init__(self, current_block_info):
+        def __init__(self, current_block_info: BlockInfo):
             self.block_info = current_block_info
 
-        def update(self, block_number, block_timestamp):
-            starknet.state.state.block_info = BlockInfo(block_number, block_timestamp)
+        def update(self, block_number: int, block_timestamp: int, gas_price: int = 0, sequencer_address: Optional[int] = None):
+            starknet.state.state.block_info = BlockInfo(block_number, block_timestamp, gas_price, sequencer_address)
 
         def reset(self):
             starknet.state.state.block_info = self.block_info
 
         def set_block_number(self, block_number):
             starknet.state.state.block_info = BlockInfo(
-                block_number, self.block_info.block_timestamp
+                block_number,
+                self.block_info.block_timestamp,
+                self.block_info.gas_price,
+                self.block_info.sequencer_address
             )
 
         def set_block_timestamp(self, block_timestamp):
             starknet.state.state.block_info = BlockInfo(
-                self.block_info.block_number, block_timestamp
+                self.block_info.block_number,
+                block_timestamp,
+                self.block_info.gas_price,
+                self.block_info.sequencer_address
             )
+
+        def set_gas_price(self, gas_price: int):
+            starknet.state.state.block_info = BlockInfo(
+                self.block_info.block_number,
+                self.block_info.block_timestamp,
+                gas_price,
+                self.block_info.sequencer_address
+            )
+
+        def set_sequencer_address(self, sequencer_address: int):
+            starknet.state.state.block_info = BlockInfo(
+                self.block_info.block_number,
+                self.block_info.block_timestamp,
+                self.block_info.gas_price,
+                sequencer_address
+            )
+
 
     return Mock(starknet.state.state.block_info)

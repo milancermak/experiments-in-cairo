@@ -1,7 +1,11 @@
 %lang starknet
 
 from starkware.starknet.common.syscalls import (
-    get_block_number, get_block_timestamp, get_caller_address)
+    get_block_number,
+    get_block_timestamp,
+    get_sequencer_address,
+    get_caller_address
+)
 
 @view
 func what_block_number{syscall_ptr : felt*}() -> (block_number : felt):
@@ -13,6 +17,12 @@ end
 func what_block_timestamp{syscall_ptr : felt*}() -> (block_timestamp : felt):
     let (block_timestamp) = get_block_timestamp()
     return (block_timestamp)
+end
+
+@view
+func what_sequencer_address{syscall_ptr : felt*}() -> (sequencer_address : felt):
+    let (addr) = get_sequencer_address()
+    return (addr)
 end
 
 @view
