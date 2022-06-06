@@ -128,6 +128,12 @@ async def tkn(starknet):
     return await starknet.deploy(contract_def=contract)
 
 
+@pytest.fixture(scope="module")
+async def arrstructs(starknet):
+    contract = compile_contract("blackmagic/arrstructs.cairo")
+    return await starknet.deploy(contract_def=contract)
+
+
 @pytest.fixture
 async def block_info_mock(starknet):
     class Mock:
