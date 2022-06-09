@@ -94,7 +94,7 @@ async def jmp_loop(starknet):
 
 @pytest.fixture(scope="module")
 async def using_invoke(starknet):
-    contract = compile_contract("using_invoke.cairo")
+    contract = compile_contract("blackmagic/using_invoke.cairo")
     return await starknet.deploy(contract_def=contract)
 
 
