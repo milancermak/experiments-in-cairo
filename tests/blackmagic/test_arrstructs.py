@@ -17,3 +17,9 @@ async def test_array_to_army(arrstructs):
     army = [10, 10, 100, 10, 10, 100, 10, 10, 100]
     tx = await arrstructs.array_to_army(army).invoke()
     assert army_to_list(tx.result.a) == army
+
+
+@pytest.mark.asyncio
+async def test_new_config(arrstructs):
+    tx = await arrstructs.new_config(10, 20, 30).invoke()
+    assert tx.result.config == arrstructs.Config(value1=10, value2=20, value3=30)
