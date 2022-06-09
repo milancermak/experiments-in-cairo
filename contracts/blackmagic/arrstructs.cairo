@@ -16,8 +16,9 @@ end
 
 @view
 func army_to_array(a : Army) -> (a_len : felt, a : felt*):
-    let (fp_val, _) = get_fp_and_pc()
-    return (Army.SIZE, cast(fp_val - 2 - Army.SIZE, felt*))
+    let (__fp__, _) = get_fp_and_pc()
+    # return (Army.SIZE, cast(&a, felt*))
+    return (Army.SIZE, &a)
 end
 
 @view
