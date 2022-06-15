@@ -1,7 +1,9 @@
 import pytest
 
+
 def army_to_list(army):
     return [prop for troop in army for prop in troop]
+
 
 @pytest.mark.asyncio
 async def test_army_to_array(arrstructs):

@@ -115,9 +115,7 @@ async def test_calling_methods(calls, targets, account_contract):
 
     # via interface direct
     exec_selector = get_selector_from_name("cc_via_interface_direct")
-    tx = await account_contract.__execute__(
-        calls.contract_address, exec_selector, [targets.contract_address]
-    ).invoke()
+    tx = await account_contract.__execute__(calls.contract_address, exec_selector, [targets.contract_address]).invoke()
     this_caller, this_contract, that_caller, that_contract = tx.result.retdata
 
     assert this_caller == account_contract.contract_address
@@ -127,9 +125,7 @@ async def test_calling_methods(calls, targets, account_contract):
 
     # via interface delegate
     exec_selector = get_selector_from_name("cc_via_interface_delegate")
-    tx = await account_contract.__execute__(
-        calls.contract_address, exec_selector, [targets.contract_address]
-    ).invoke()
+    tx = await account_contract.__execute__(calls.contract_address, exec_selector, [targets.contract_address]).invoke()
     this_caller, this_contract, that_caller, that_contract = tx.result.retdata
 
     assert this_caller == account_contract.contract_address

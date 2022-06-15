@@ -13,7 +13,7 @@ async def test_exp(jmp_loop):
     x = 8
     a = 42
     n = 16
-    r = x * a ** n
+    r = x * a**n
 
     tx_r = await jmp_loop.exp_recr(x, a, n).invoke()
     tx_i = await jmp_loop.exp_inst(x, a, n).invoke()
