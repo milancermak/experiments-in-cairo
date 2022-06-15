@@ -117,18 +117,6 @@ async def dicts(starknet):
 
 
 @pytest.fixture(scope="module")
-async def foo(starknet):
-    contract = compile_contract("foo.cairo")
-    return await starknet.deploy(contract_class=contract)
-
-
-@pytest.fixture(scope="module")
-async def tkn(starknet):
-    contract = compile_contract("token/tkn.cairo")
-    return await starknet.deploy(contract_class=contract)
-
-
-@pytest.fixture(scope="module")
 async def arrstructs(starknet):
     contract = compile_contract("blackmagic/arrstructs.cairo")
     return await starknet.deploy(contract_class=contract)
