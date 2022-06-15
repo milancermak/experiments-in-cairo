@@ -134,13 +134,21 @@ async def arrstructs(starknet):
     return await starknet.deploy(contract_class=contract)
 
 
+@pytest.fixture(scope="module")
+async def srw(starknet):
+    contract = compile_contract("blackmagic/syscall_rw.cairo")
+    return await starknet.deploy(contract_class=contract)
+
+
 @pytest.fixture
 async def block_info_mock(starknet):
     class Mock:
         def __init__(self, current_block_info: BlockInfo):
             self.block_info = current_block_info
 
-        def update(self, block_number: int, block_timestamp: int, gas_price: int = 0, sequencer_address: Optional[int] = None):
+        def update(
+            self, block_number: int, block_timestamp: int, gas_price: int = 0, sequencer_address: Optional[int] = None
+        ):
             starknet.state.state.block_info = BlockInfo(block_number, block_timestamp, gas_price, sequencer_address)
 
         def reset(self):
@@ -151,7 +159,7 @@ async def block_info_mock(starknet):
                 block_number,
                 self.block_info.block_timestamp,
                 self.block_info.gas_price,
-                self.block_info.sequencer_address
+                self.block_info.sequencer_address,
             )
 
         def set_block_timestamp(self, block_timestamp):
@@ -159,7 +167,7 @@ async def block_info_mock(starknet):
                 self.block_info.block_number,
                 block_timestamp,
                 self.block_info.gas_price,
-                self.block_info.sequencer_address
+                self.block_info.sequencer_address,
             )
 
         def set_gas_price(self, gas_price: int):
@@ -167,7 +175,7 @@ async def block_info_mock(starknet):
                 self.block_info.block_number,
                 self.block_info.block_timestamp,
                 gas_price,
-                self.block_info.sequencer_address
+                self.block_info.sequencer_address,
             )
 
         def set_sequencer_address(self, sequencer_address: int):
@@ -175,8 +183,7 @@ async def block_info_mock(starknet):
                 self.block_info.block_number,
                 self.block_info.block_timestamp,
                 self.block_info.gas_price,
-                sequencer_address
+                sequencer_address,
             )
-
 
     return Mock(starknet.state.state.block_info)
